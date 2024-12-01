@@ -50,8 +50,8 @@ class Discriminator(nn.Module):
 
 generator = Generator()
 discriminator = Discriminator()
-g_optimizer = optim.RMSprop(generator.parameters(), lr=lr)
-d_optimizer = optim.RMSprop(discriminator.parameters(), lr=lr)
+g_optimizer = optim.Adam(generator.parameters(), lr=lr, betas=(0.5, 0.999))
+d_optimizer = optim.Adam(discriminator.parameters(), lr=lr, betas=(0.5, 0.999))
 criterion = nn.BCELoss()
 
 # load MNIST 
