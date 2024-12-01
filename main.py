@@ -12,7 +12,7 @@ torch.manual_seed(42) #makes the randomnes seeded, so its reproducable
 
 # params
 latent_dim = 200
-hidden_dim = 256 
+hidden_dim = 512 
 image_dim = 28*28
 num_epochs = 100
 batch_size = 1024 * 2 * 2
@@ -23,8 +23,10 @@ class Generator(nn.Module):
         super(Generator, self).__init__()
         self.model = nn.Sequential(
             nn.Linear(latent_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
             nn.LeakyReLU(),
             nn.Linear(hidden_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
             nn.LeakyReLU(),
             nn.Linear(hidden_dim, image_dim),
             nn.Tanh()
