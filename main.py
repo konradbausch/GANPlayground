@@ -11,11 +11,11 @@ import results
 torch.manual_seed(42) #makes the randomnes seeded, so its reproducable
 
 # params
-latent_dim = 200
-hidden_dim = 512 
+latent_dim = 100
+hidden_dim = 256 
 image_dim = 28*28
 num_epochs = 100
-batch_size = 1024 * 2 * 2
+batch_size = 256
 lr = 0.0001
 
 class Generator(nn.Module):
@@ -23,6 +23,9 @@ class Generator(nn.Module):
         super(Generator, self).__init__()
         self.model = nn.Sequential(
             nn.Linear(latent_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.LeakyReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
             nn.BatchNorm1d(hidden_dim),
             nn.LeakyReLU(),
             nn.Linear(hidden_dim, hidden_dim),
@@ -47,6 +50,8 @@ class Discriminator(nn.Module):
             nn.Linear(hidden_dim, hidden_dim),
             nn.LeakyReLU(),
             nn.Linear(hidden_dim, hidden_dim),
+            nn.LeakyReLU(),
+             nn.Linear(hidden_dim, hidden_dim),
             nn.LeakyReLU(),
             nn.Linear(hidden_dim, 1),
             nn.Sigmoid()
