@@ -78,28 +78,30 @@ def train_gan():
         for _, (real_images, _) in enumerate(dataloader):
             batch_size = real_images.size(0)
             real_images = real_images.view(-1, image_dim)
-
             real_labels = torch.ones(batch_size, 1)
             fake_labels = torch.zeros(batch_size, 1)
 
+            # Train discriminator once
             d_optimizer.zero_grad()
             outputs = discriminator(real_images)
             d_loss_real = criterion(outputs, real_labels)
-
             z = torch.randn(batch_size, latent_dim)
             fake_images = generator(z)
             outputs = discriminator(fake_images.detach())
             d_loss_fake = criterion(outputs, fake_labels)
-
             d_loss = d_loss_real + d_loss_fake
             d_loss.backward()
             d_optimizer.step()
 
-            g_optimizer.zero_grad()
-            outputs = discriminator(fake_images)
-            g_loss = criterion(outputs, real_labels)
-            g_loss.backward()
-            g_optimizer.step()
+            # Train generator twice
+            for _ in range(2):
+                g_optimizer.zero_grad()
+                z = torch.randn(batch_size, latent_dim)  # New noise for each training step
+                fake_images = generator(z)
+                outputs = discriminator(fake_images)
+                g_loss = criterion(outputs, real_labels)
+                g_loss.backward()
+                g_optimizer.step()
 
         print(f"Training [Epoch: {epoch}]")
 
