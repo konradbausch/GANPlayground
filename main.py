@@ -23,9 +23,9 @@ class Generator(nn.Module):
         super(Generator, self).__init__()
         self.model = nn.Sequential(
             nn.Linear(latent_dim, hidden_dim),
-            nn.ReLU(),
+            nn.LeakyReLU(),
             nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
+            nn.LeakyReLU(),
             nn.Linear(hidden_dim, image_dim),
             nn.Tanh()
         )
@@ -38,9 +38,9 @@ class Discriminator(nn.Module):
         super(Discriminator, self).__init__()
         self.model = nn.Sequential(
             nn.Linear(image_dim, hidden_dim),
-            nn.ReLU(),
+            nn.LeakyReLU(),
             nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
+            nn.LeakyReLU(),
             nn.Linear(hidden_dim, 1),
             nn.Sigmoid()
         )
