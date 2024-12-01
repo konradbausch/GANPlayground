@@ -16,13 +16,16 @@ hidden_dim = 512
 image_dim = 28*28
 num_epochs = 100
 batch_size = 1024 * 2 * 2
-lr = 0.0002
+lr = 0.0001
 
 class Generator(nn.Module):
     def __init__(self):
         super(Generator, self).__init__()
         self.model = nn.Sequential(
             nn.Linear(latent_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.LeakyReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
             nn.BatchNorm1d(hidden_dim),
             nn.LeakyReLU(),
             nn.Linear(hidden_dim, hidden_dim),
@@ -40,6 +43,8 @@ class Discriminator(nn.Module):
         super(Discriminator, self).__init__()
         self.model = nn.Sequential(
             nn.Linear(image_dim, hidden_dim),
+            nn.LeakyReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
             nn.LeakyReLU(),
             nn.Linear(hidden_dim, hidden_dim),
             nn.LeakyReLU(),
@@ -80,8 +85,8 @@ def train_gan():
         for _, (real_images, _) in enumerate(dataloader):
             batch_size = real_images.size(0)
             real_images = real_images.view(-1, image_dim)
-            real_labels = torch.ones(batch_size, 1)
-            fake_labels = torch.zeros(batch_size, 1)
+            real_labels = torch.ones(batch_size, 1) * 0.9
+            fake_labels = torch.zeros(batch_size, 1) * 0.1
 
             # Train discriminator once
             d_optimizer.zero_grad()
