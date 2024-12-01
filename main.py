@@ -14,8 +14,8 @@ torch.manual_seed(42) #makes the randomnes seeded, so its reproducable
 latent_dim = 100
 hidden_dim = 256 
 image_dim = 28*28
-num_epochs = 100
-batch_size = 256
+num_epochs = 200
+batch_size = 512 
 lr = 0.0001
 
 class Generator(nn.Module):
@@ -105,7 +105,6 @@ def train_gan():
             d_loss.backward()
             d_optimizer.step()
 
-            # Train generator twice
             for _ in range(2):
                 g_optimizer.zero_grad()
                 z = torch.randn(batch_size, latent_dim)  # New noise for each training step
